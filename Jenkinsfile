@@ -1,33 +1,5 @@
-#!/usr/bin/env groovy
-@Library("com.optum.jenkins.pipeline.library@master") _
 pipeline {
     agent none
-
-    parameters {
-        choice(
-            name: 'ENVIRONMENT',
-            choices: ['dev','tst'],
-            description: 'Environment to be deployed'
-        ),
-
-        string(
-            defaultValue: '',
-            description: 'Provide OnehealthcareId',
-            name: 'User_Id'
-        ),
-
-        string(
-            defaultValue: '',
-            description: 'Please provide user email',
-            name: 'User_Email'
-        )
-
-        string(
-            defaultValue: '',
-            description: 'Please provide PRTY SK for user needs access',
-            name: 'CLIENT_SK'
-        )
-    }
 
     environment {
         LOGLEVEL = "info"
@@ -35,11 +7,34 @@ pipeline {
     }
 
     stages {
-        stage ('Validate Inputs') {
+        stage('Setup parameters') {
             steps {
-                script{
-                    def validator = load("./validator.groovy")
-                    validator.checkParamInputs()
+                script { 
+                    properties([
+                        parameters([
+                            choice(
+                                choices: ['ONE', 'TWO'], 
+                                name: 'PARAMETER_01'
+                            ),
+                            booleanParam(
+                                defaultValue: true, 
+                                description: '', 
+                                name: 'BOOLEAN'
+                            ),
+                            text(
+                                defaultValue: '''
+                                this is a multi-line 
+                                string parameter example
+                                ''', 
+                                 name: 'MULTI-LINE-STRING'
+                            ),
+                            string(
+                                defaultValue: 'scriptcrunch', 
+                                name: 'STRING-PARAMETER', 
+                                trim: true
+                            )
+                        ])
+                    ])
                 }
             }
         }
@@ -47,8 +42,8 @@ pipeline {
          agent none
          steps {
 
-
-             glApproval message: 'Approve User?', unit: 'HOURS', time: 3, defaultValue: 'Enter approval comments', submitter: 'EDPS_DEV'
+             echo 'Inside User Business Approval'
+             //glApproval message: 'Approve User?', unit: 'HOURS', time: 3, defaultValue: 'Enter approval comments', submitter: 'EDPS_DEV'
              }
          }
         stage('Select Deployment Environment') {
@@ -74,7 +69,7 @@ def determineUserEnvBuildVersion() {
 
 	echo "Build number is ${BUILD_NUMBER}"
 
-	def version =  params.ENVIRONMENT) + "-" + params.User_Id +'-' + "${BUILD_NUMBER}"
+	//def version =  params.ENVIRONMENT + "-" + params.User_Id +'-' + "${BUILD_NUMBER}"
 	//For some unknown reason, setting artifact version works in maven only when set using a env variable like below
 
 
