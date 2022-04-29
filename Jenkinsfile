@@ -19,27 +19,27 @@ pipeline {
                             ),
                             string(
                                 defaultValue: '',
-                                name: 'optumId', 
+                                name: 'One Healthcare Id', 
                                 trim: true,
                                 description: "User One Healthcare Id"
                             ),
                             string(
                                 defaultValue: '', 
-                                name: 'emailId', 
+                                name: 'Email Id', 
                                 trim: true,
                                 description: "User email id as registered with One Healthcare Id"
                             ),
                             string(
                                 defaultValue: '', 
-                                name: 'firstName', 
+                                name: 'First Name', 
                                 trim: true,
-                                description: "User first name"
+                                description: "Enter user first name"
                             ),
                             string(
                                 defaultValue: '', 
-                                name: 'lastName', 
+                                name: 'Last Name', 
                                 trim: true,
-                                description: "User last name"
+                                description: "Enter user last name"
                             )
                         ])
                     ])
@@ -53,10 +53,10 @@ pipeline {
         }
         stage('call user provision request'){
             steps{
-                echo "optum Id : " + params.optumId;
-                echo "email Id : " + params.emailId;
-                echo "first name : " + params.firstName;
-                echo "last name : " + params.lastName;
+                echo "optum Id : " + params['One Healthcare Id'];
+                echo "email Id : " + params['Email Id'];
+                echo "first name : " + params['First Name'];
+                echo "last name : " + params['Last Name'];
             }
         }
         stage('User Business Approval') {
