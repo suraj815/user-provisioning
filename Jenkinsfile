@@ -47,13 +47,17 @@ pipeline {
             }
         }
         stage('Validating Request') {
-            echo "Validating user provision details here"
+            steps{
+                echo "Validating user provision details here"
+            }
         }
         stage('call user provision request'){
-            echo "optum Id : " + params.optumId;
-            echo "email Id : " + params.emailId;
-            echo "first name : " + params.firstName;
-            echo "last name : " + params.lastName;
+            steps{
+                echo "optum Id : " + params.optumId;
+                echo "email Id : " + params.emailId;
+                echo "first name : " + params.firstName;
+                echo "last name : " + params.lastName;
+            }
         }
         stage('User Business Approval') {
          agent none
