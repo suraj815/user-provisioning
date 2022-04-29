@@ -67,9 +67,10 @@ pipeline {
                         case 'DEV':
                                   final String url = "http://localhost:8080/job/user_param_pipeline/api/json?pretty=true"
 
-                                  final String response = bat(script: "curl -s $url", returnStdout: true).trim()
-
-                                  echo "response = "+ response;
+                                  withCredentials([usernameColonPassword(credentialsId: "jenkins-api-token", variable: "API_TOKEN")]) {
+					final String response = sh(script: "curl -s -u $API_TOKEN $url", returnStdout: true).trim()
+					echo response
+				  }
                         break
                     }
                 }
