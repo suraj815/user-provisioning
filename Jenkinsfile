@@ -76,7 +76,7 @@ pipeline {
 
                                   final String response = sh(script: "curl -s $url", returnStdout: true).trim()
 
-                                  echo response
+                                  echo "response = "+ response;
                         break
                     }
                 }
