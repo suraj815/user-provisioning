@@ -60,6 +60,7 @@ pipeline {
             }
         }
 	stage('Select Deployment Environment') {
+	    agent any 
             steps {
                 script {
                     switch (params.ENVIRONMENT) {
