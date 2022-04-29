@@ -59,15 +59,7 @@ pipeline {
                 echo "last name : " + params['Last Name'];
             }
         }
-        stage('User Business Approval') {
-         agent none
-         steps {
-
-             echo 'Inside User Business Approval'
-             //glApproval message: 'Approve User?', unit: 'HOURS', time: 3, defaultValue: 'Enter approval comments', submitter: 'EDPS_DEV'
-             }
-         }
-        stage('Select Deployment Environment') {
+	stage('Select Deployment Environment') {
             steps {
                 script {
                     switch (params.ENVIRONMENT) {
@@ -82,7 +74,14 @@ pipeline {
                 }
             }
         }
+        stage('User Business Approval') {
+         agent none
+         steps {
 
+             echo 'Inside User Business Approval'
+             //glApproval message: 'Approve User?', unit: 'HOURS', time: 3, defaultValue: 'Enter approval comments', submitter: 'EDPS_DEV'
+             }
+         }
     }
 }
 
