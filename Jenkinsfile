@@ -7,36 +7,53 @@ pipeline {
     }
 
     stages {
-        stage('Setup parameters') {
+        stage('Fetch User Details') {
             steps {
                 script { 
                     properties([
                         parameters([
                             choice(
-                                choices: ['ONE', 'TWO'], 
-                                name: 'PARAMETER_01'
-                            ),
-                            booleanParam(
-                                defaultValue: true, 
-                                description: '', 
-                                name: 'BOOLEAN'
-                            ),
-                            text(
-                                defaultValue: '''
-                                this is a multi-line 
-                                string parameter example
-                                ''', 
-                                 name: 'MULTI-LINE-STRING'
+                                choices: ['DEV', 'TST', 'STG'], 
+                                name: 'ENVIRONMENT',
+                                description: "Chhose the environment for user creation"
                             ),
                             string(
-                                defaultValue: 'scriptcrunch', 
-                                name: 'STRING-PARAMETER', 
-                                trim: true
+                                defaultValue: '',
+                                name: 'optumId', 
+                                trim: true,
+                                description: "User One Healthcare Id"
+                            ),
+                            string(
+                                defaultValue: '', 
+                                name: 'emailId', 
+                                trim: true,
+                                description: "User email id as registered with One Healthcare Id"
+                            ),
+                            string(
+                                defaultValue: '', 
+                                name: 'firstName', 
+                                trim: true,
+                                description: "User first name"
+                            ),
+                            string(
+                                defaultValue: '', 
+                                name: 'lastName', 
+                                trim: true,
+                                description: "User last name"
                             )
                         ])
                     ])
                 }
             }
+        }
+        stage('Validating Request') {
+            echo "Validating user provision details here"
+        }
+        stage('call user provision request'){
+            echo "optum Id : " + params.optumId;
+            echo "email Id : " + params.emailId;
+            echo "first name : " + params.firstName;
+            echo "last name : " + params.lastName;
         }
         stage('User Business Approval') {
          agent none

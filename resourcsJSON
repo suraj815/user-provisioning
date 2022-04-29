@@ -1,7 +1,12 @@
-{ "optumId": "",
-	"emailId": "",
-	"firstName": "",
-	"lastName": "",
-"levelOfApprover": [],
-"prtySkReqList" : [{"prtySk": 68, "allChildAccess": "N", "prtySkAction": "add_update|delete|"}]
+{
+    "optumId": "",
+    "emailId": "",
+    "firstName": "",
+    "lastName": "",
+    "levelOfApprover": [],
+    "prtySkReqList": [{
+        "prtySk": 68,
+        "allChildAccess": "N",
+        "prtySkAction": "add_update|delete|"
+    }]
 }
