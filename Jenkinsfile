@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     switch (params.ENVIRONMENT) {
-                        case 'dev':
+                        case 'DEV':
                                   final String url = "http://localhost:8080/job/user_param_pipeline/api/json?pretty=true"
 
                                   final String response = sh(script: "curl -s $url", returnStdout: true).trim()
