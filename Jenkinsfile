@@ -54,7 +54,7 @@ pipeline {
 	    stage('User Provision Approval') {
             steps {
                 script {
-                    CHOICES = [Approve, Reject];    
+                    CHOICES = ["Approve", "Reject"];    
                     env.YourTag = input {
                             message 'Approve Reject User provisioning request'
                             ok 'Approve'
