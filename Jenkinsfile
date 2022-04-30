@@ -71,10 +71,9 @@ pipeline {
                                         choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')
                                     ]
                     )   
-                            
                 }           
+                //echo "${env.YourTag['SUBMITTER_RESPONSE']} took action ${env.YourTag.TAG} on user provision request."
                 //echo "Deploying ${env.YourTag}. Have a nice day."
-                echo "${env['YourTag']['SUBMITTER_RESPONSE']} took action ${env.YourTag.TAG} on user provision request."
             }
         }
         stage('call user provision request'){
