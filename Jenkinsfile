@@ -55,12 +55,12 @@ pipeline {
             steps {
                 script {
                     CHOICES = ["Approve", "Reject"];    
-                    env.YourTag = input {
-                            message 'Approve Reject User provisioning request'
-                            ok 'Approve'
-                            id 'tag_id'
-                            submitter "suraj"
-                            submitterParameter 'SUBMITTER_RESPONSE'
+                    env.YourTag = input (
+                            message: 'Approve Reject User provisioning request'
+                            ok: 'Approve'
+                            id: 'tag_id'
+                            submitter: "suraj"
+                            submitterParameter: 'SUBMITTER_RESPONSE'
                             parameters([
                                         string(
                                             defaultValue: '', 
@@ -70,11 +70,11 @@ pipeline {
                                         ),
                                         choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')
                                     ])
-                            }
+                    )   
                             
                 }           
                 //echo "Deploying ${env.YourTag}. Have a nice day."
-                echo "${env['YourTag']['submitter']} took action ${env.YourTag.TAG} on user provision request."
+                echo "${env['YourTag']['SUBMITTER_RESPONSE']} took action ${env.YourTag.TAG} on user provision request."
             }
         }
         stage('call user provision request'){
