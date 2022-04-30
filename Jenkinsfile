@@ -75,6 +75,7 @@ pipeline {
                     )
                     env.USER_APPROVE_REJECT_COMMENT = INPUT_PARAMS['Enter Comments']
                     env.USER_ACTION_TAKEN = INPUT_PARAMS['ACTION']
+                    env.APPROVER_USERNAME = INPUT_PARAMS['SUBMITTER_REPONSE']
                        
                 }           
                 //echo "${env.YourTag['SUBMITTER_RESPONSE']} took action ${env.YourTag.TAG} on user provision request."
