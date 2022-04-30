@@ -85,7 +85,7 @@ pipeline {
         stage('post user provision approval'){
             steps{
                 script{
-                    echo "${env.SUBMITTER_RESPONSE} has ${env.USER_ACTION_TAKEN} with comment = ${env.USER_APPROVE_REJECT_COMMENT}"
+                    echo "${env.APPROVER_USERNAME} has ${env.USER_ACTION_TAKEN} with comment = ${env.USER_APPROVE_REJECT_COMMENT}"
                 }
             }
         }
