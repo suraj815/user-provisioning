@@ -72,9 +72,10 @@ pipeline {
                             parameters: [
                                         string(name: 'Enter Comments', defaultValue: '', trim: true,description: "Enter Comments for approve/reject. It is mandatory."),
                                         choice(choices: CHOICES, description: 'Select a tag for this build', name: 'ACTION')]
-                            env.USER_APPROVE_REJECT_COMMENT = INPUT_PARAMS['Enter Comments']
-                            env.USER_ACTION_TAKEN = INPUT_PARAMS['ACTION']
-                    )   
+                    )
+                    env.USER_APPROVE_REJECT_COMMENT = INPUT_PARAMS['Enter Comments']
+                    env.USER_ACTION_TAKEN = INPUT_PARAMS['ACTION']
+                       
                 }           
                 //echo "${env.YourTag['SUBMITTER_RESPONSE']} took action ${env.YourTag.TAG} on user provision request."
                 //echo "Deploying ${env.YourTag}. Have a nice day."
