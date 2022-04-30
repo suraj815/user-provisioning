@@ -55,10 +55,21 @@ pipeline {
             steps {
                 script {
                     CHOICES = [Approve, Reject];    
-                    env.YourTag = input message: 'Approve Reject User provisioning request',ok : 'Deploy',id :'tag_id',
+                    env.YourTag = input {
+                            message: 'Approve Reject User provisioning request',
+                            ok : 'Approve',
+                            id :'tag_id',
                             submitter: "suraj",
-                            submitterParameter: 'submitter',
-                            parameters:[choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')]
+                            submitterParameter: 'SUBMITTER_RESPONSE',
+                            parameters:([
+                                        string(
+                                            defaultValue: '', 
+                                            name: 'Enter Comments', 
+                                            trim: true,
+                                            description: "Enter Comments for approve/reject. It is mandatory."
+                                        ),
+                                        choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')])
+                            }
                             
                 }           
                 //echo "Deploying ${env.YourTag}. Have a nice day."
