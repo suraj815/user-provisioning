@@ -51,6 +51,19 @@ pipeline {
                 echo "Validating user provision details here"
             }
         }
+	    stage('User Input') {
+
+
+	    steps {
+
+		script {
+			CHOICES = ["tag1", "tag2", "tag3"];    
+			env.YourTag = input  message: 'What are we deploying today?',ok : 'Deploy',id :'tag_id',
+					parameters:[choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')]
+			}           
+		echo "Deploying ${env.YourTag}. Have a nice day."
+	    }
+        }
         stage('call user provision request'){
             steps{
                 echo "optum Id : " + params['One Healthcare Id'];
