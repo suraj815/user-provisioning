@@ -52,17 +52,18 @@ pipeline {
             }
         }
 	    stage('User Input') {
-
-
-	    steps {
-
-		script {
-			CHOICES = ["tag1", "tag2", "tag3"];    
-			env.YourTag = input  message: 'What are we deploying today?',ok : 'Deploy',id :'tag_id',
-					parameters:[choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')]
-			}           
-		echo "Deploying ${env.YourTag}. Have a nice day."
-	    }
+            steps {
+                script {
+                    CHOICES = [Approve, Reject];    
+                    env.YourTag = input(message: 'Approve Reject User provisioning request',ok : 'Deploy',id :'tag_id',
+                            submitter: "suraj",
+                            submitterParameter: submitter,
+                            parameters:[choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')]
+                            )
+                }           
+                //echo "Deploying ${env.YourTag}. Have a nice day."
+                echo "${env.YourTag.submitter} took action ${env.YourTag.TAG} on user provision request."
+            }
         }
         stage('call user provision request'){
             steps{
