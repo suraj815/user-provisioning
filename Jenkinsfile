@@ -56,11 +56,11 @@ pipeline {
                 script {
                     CHOICES = ["Approve", "Reject"];    
                     env.YourTag = input (
-                            message: 'Approve Reject User provisioning request'
-                            ok: 'Approve'
-                            id: 'tag_id'
-                            submitter: "suraj"
-                            submitterParameter: 'SUBMITTER_RESPONSE'
+                            message: 'Approve Reject User provisioning request',
+                            ok: 'Approve',
+                            id: 'tag_id',
+                            submitter: "suraj",
+                            submitterParameter: 'SUBMITTER_RESPONSE',
                             parameters([
                                         string(
                                             defaultValue: '', 
