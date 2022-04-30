@@ -54,14 +54,14 @@ pipeline {
 	    stage('User Provision Approval') {
             steps {
                 script {
-                    CHOICES = ["Approve", "Reject"];    
-                    env.YourTag = input (
+                    CHOICES = ["Approve", "Reject"];
+                    env.YourTag = input(
                             message: 'Approve Reject User provisioning request',
                             ok: 'Approve',
                             id: 'tag_id',
                             submitter: "suraj",
                             submitterParameter: 'SUBMITTER_RESPONSE',
-                            parameters([
+                            parameters: [
                                         string(
                                             defaultValue: '', 
                                             name: 'Enter Comments', 
@@ -69,7 +69,7 @@ pipeline {
                                             description: "Enter Comments for approve/reject. It is mandatory."
                                         ),
                                         choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')
-                                    ])
+                                    ]
                     )   
                             
                 }           
