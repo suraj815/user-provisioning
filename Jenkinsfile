@@ -51,24 +51,25 @@ pipeline {
                 echo "Validating user provision details here"
             }
         }
-	    stage('User Input') {
+	    stage('User Provision Approval') {
             steps {
                 script {
                     CHOICES = [Approve, Reject];    
                     env.YourTag = input {
-                            message: 'Approve Reject User provisioning request',
-                            ok : 'Approve',
-                            id :'tag_id',
-                            submitter: "suraj",
-                            submitterParameter: 'SUBMITTER_RESPONSE',
-                            parameters:([
+                            message 'Approve Reject User provisioning request',
+                            ok 'Approve',
+                            id 'tag_id',
+                            submitter "suraj",
+                            submitterParameter 'SUBMITTER_RESPONSE',
+                            parameters([
                                         string(
                                             defaultValue: '', 
                                             name: 'Enter Comments', 
                                             trim: true,
                                             description: "Enter Comments for approve/reject. It is mandatory."
                                         ),
-                                        choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')])
+                                        choice(choices: CHOICES, description: 'Select a tag for this build', name: 'TAG')
+                                    ])
                             }
                             
                 }           
