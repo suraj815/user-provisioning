@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+@Library("com.optum.jenkins.pipeline.library@master") _
 pipeline {
     agent none
 
@@ -47,8 +49,13 @@ pipeline {
             }
         }
         stage('Validating Request') {
+            agent any
             steps{
-                echo "Validating user provision details here"
+                echo "Validating user provision details here";
+                script{
+                    def validator = load("./validator.groovy")
+                    validator.checkParamInputs()
+                }
             }
         }
         stage('call user provision request'){
@@ -67,7 +74,7 @@ pipeline {
                             message: 'Approve Reject User provisioning request',
                             ok: 'Approve',
                             id: 'tag_id',
-                            submitter: "suraj",
+                            submitter: "ssiyaram",
                             submitterParameter: 'SUBMITTER_RESPONSE',
                             parameters: [
                                         string(name: 'Enter Comments', defaultValue: '', trim: true,description: "Enter Comments for approve/reject. It is mandatory."),
