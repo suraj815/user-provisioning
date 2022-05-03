@@ -66,6 +66,7 @@ pipeline {
                 echo "email Id : " + params['Email Id'];
                 echo "first name : " + params['First Name'];
                 echo "last name : " + params['Last Name'];
+		echo "prtySKRequestList : " + params['prtySkReqList'];
             }
         }
 	    stage('User Provision Approval') {
