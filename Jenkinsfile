@@ -104,7 +104,7 @@ pipeline {
                 script {
                     switch (params.ENVIRONMENT) {
                         case 'DEV':
-                            final String url = "http://localhost:8080/job/user-provision-pipeline/api/json?pretty=true"
+                            final String url = "http://imccbcp29-msl1:8080/job/user-provision-pipeline/api/json?pretty=true"
                             final String basicAuth = "Authorization: Basic c3NpeWFyYW06c3NpeWFyYW0="
                             final String finalUrl = "\"$basicAuth\" $url"
                             
