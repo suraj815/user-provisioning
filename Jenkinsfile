@@ -43,7 +43,9 @@ pipeline {
                                 trim: true,
                                 description: "Enter user last name"
                             ),
-                            booleanParam(description: 'This is description', name: 'BSC_ALL - Y - ADD/UPDATE')
+                            checkboxParameter(name: 'prtySkReqList', format: 'JSON',
+                pipelineSubmitContent: '{"CheckboxParameter": [{"key": "BSC_ALL-Y-ADD_UPDATE","value": "68-Y-ADD_UPDATE"},{"key": "BSC_ALL-N-ADD_UPDATE","value": "68-N-ADD_UPDATE"},
+					      {"key": "BSC_ALL-Y-DELETE","value": "68-Y-DELETE"}, {"key": "BSC_ALL-N-DELETE","value": "68-N-DELETE"}]}', description: 'Select client access as needed')
                         ])
                     ])
                 }
@@ -110,9 +112,10 @@ pipeline {
                             
                             echo "finalUrl = ${finalUrl}"
                             
-                            final def (String response, int code) = bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $finalUrl", returnStdout: true).trim().tokenize("\n")
-                            echo "code = "+code;
-                            echo "response = ${response}"
+                            //final def (String response, int code) = bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $finalUrl", returnStdout: true).trim().tokenize("\n")
+                            //echo "code = "+code;
+                            final String response = bat(script: "curl -L -X GET -H $finalUrl", returnStdout: true).trim()
+			    echo "response = ${response}"
                                  
                         break
                     }
