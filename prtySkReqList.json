@@ -1,0 +1,16 @@
+{
+    "CheckboxParameter": [
+    {
+      "key": "BSC_ALL - Y - ADD_UPDATE",
+      "value": "68-Y-ADD_UPDATE"
+    },
+    {
+      "key": "key-2",
+      "value": "value-2"
+    },
+    {
+      "key": "key-3",
+      "value": "value-3"
+    }
+  ]
+}
