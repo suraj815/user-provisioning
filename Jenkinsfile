@@ -103,8 +103,16 @@ pipeline {
                 script {
                     switch (params.ENVIRONMENT) {
                         case 'DEV':
-                                  final String url = "http://localhost:8080/job/user_param_pipeline/api/json?pretty=true"
+                            final String url = "http://localhost:8080/job/user_param_pipeline/api/json?pretty=true"
+                            final String basicAuth = "Authorization: Basic c3VyYWo6c3VyYWo="
+                            final def (String response, int code) =
+                            sh(script: "curl -L -X GET -w '\\n%{response_code}' -H $basicAuth $url", returnStdout: true).trim().tokenize("\n")
 
+                            echo "HTTP response status code: $code"
+
+                            if (code == 200) {
+                                echo response
+                            }
                                  // withCredentials([usernameColonPassword(credentialsId: "jenkins-api-token", variable: "API_TOKEN")]) {
 				//	final String response = sh(script: "curl -s -u $API_TOKEN $url", returnStdout: true).trim()
 				//	echo response
