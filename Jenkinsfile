@@ -68,8 +68,10 @@ pipeline {
                 echo "email Id : " + params['Email Id'];
                 echo "first name : " + params['First Name'];
                 echo "last name : " + params['Last Name'];
-		echo "Client Request List : " + params['Client Request List'];
-		echo "Approvers Required : " + params['Approvers Required']; 
+		        echo "Client Request List : " + params['Client Request List'];
+		        echo "Approvers Required : " + params['Approvers Required'];
+
+                createUserOnboardingRequestBody(params); 
             }
         }
 	    stage('User Provision Approval') {
@@ -134,6 +136,28 @@ pipeline {
              }
          }
     }
+}
+
+def createUserOnboardingRequestBody(params) {
+    echo "Inside createUserOnboardingRequestBody"
+    def prtySkReqList = [];
+    String prtySkReqListUserInput = params['Client Request List'];
+    String[] prtySkRequestArray = prtySkReqListUserInput.split(",");
+    for(String prtySkRequest: prtySkRequestArray){
+        
+        def eachPrtySkMap = [];
+        String[] array = prtySkRequest.split("-");
+        eachPrtySkMap.put("prtySk", array[0]);
+        eachPrtySkMap.put("allChildAccess", array[1]);
+        eachPrtySkMap.put("prtySkAction", array[2]);
+
+        prtySkReqList.add(eachPrtySkMap);
+        eachPrtySkMap = [];
+    } 
+    echo "prtySkReqList : "+ prtySkReqList;
+    return prtySkReqList;
+
+
 }
 
 def determineUserEnvBuildVersion() {
