@@ -109,12 +109,11 @@ pipeline {
 			    
 			    echo "finalUrl = ${finalUrl}"
 			    
-                            final def  =
-                            bat(script: "curl -L -X GET -H $finalUrl", returnStdout: true).trim()
+                            def = bat(script: "curl -L -X GET -H $finalUrl", returnStdout: true).trim()
 
                             
 
-                                echo response
+                                echo def
                                  // withCredentials([usernameColonPassword(credentialsId: "jenkins-api-token", variable: "API_TOKEN")]) {
 				//	final String response = sh(script: "curl -s -u $API_TOKEN $url", returnStdout: true).trim()
 				//	echo response
