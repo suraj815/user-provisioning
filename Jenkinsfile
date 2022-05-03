@@ -110,7 +110,7 @@ pipeline {
                             
                             echo "finalUrl = ${finalUrl}"
                             
-                            final def (String response, int code) = bat(script: "curl -L -X GET -H $finalUrl -w '\\n%{response_code}'", returnStdout: true).trim().tokenize("\n")
+                            final def (String response, int code) = bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $finalUrl", returnStdout: true).trim().tokenize("\n")
                             echo "code = "+code;
                             echo "response = ${response}"
                                  
