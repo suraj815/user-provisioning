@@ -43,8 +43,10 @@ pipeline {
                                 trim: true,
                                 description: "Enter user last name"
                             ),
-                            checkboxParameter(name: 'prtySkReqList', format: 'JSON',
-                pipelineSubmitContent: '{"CheckboxParameter": [{"key": "BSC_ALL-Y-ADD_UPDATE","value": "68-Y-ADD_UPDATE"},{"key": "BSC_ALL-N-ADD_UPDATE","value": "68-N-ADD_UPDATE"},{"key": "BSC_ALL-Y-DELETE","value": "68-Y-DELETE"}, {"key": "BSC_ALL-N-DELETE","value": "68-N-DELETE"}]}', description: 'Select client access as needed')
+                            checkboxParameter(name: 'Client Request List', format: 'JSON',
+                pipelineSubmitContent: '{"CheckboxParameter": [{"key": "BSC_ALL-Y-ADD_UPDATE","value": "68-Y-ADD_UPDATE"},{"key": "BSC_ALL-N-ADD_UPDATE","value": "68-N-ADD_UPDATE"},{"key": "BSC_ALL-Y-DELETE","value": "68-Y-DELETE"}, {"key": "BSC_ALL-N-DELETE","value": "68-N-DELETE"}]}', description: 'Select client access as needed'),
+				checkboxParameter(name: 'Approvers Required', format: 'JSON',
+                pipelineSubmitContent: '{"CheckboxParameter": [{"key": "TE","value": "TE"},{"key": "BIZ","value": "BIZ"}]}', description: 'Select Approvers')
                         ])
                     ])
                 }
@@ -66,7 +68,8 @@ pipeline {
                 echo "email Id : " + params['Email Id'];
                 echo "first name : " + params['First Name'];
                 echo "last name : " + params['Last Name'];
-		echo "prtySKRequestList : " + params['prtySkReqList'];
+		echo "Client Request List : " + params['Client Request List'];
+		echo "Approvers Required : " + params['Approvers Required']; 
             }
         }
 	    stage('User Provision Approval') {
