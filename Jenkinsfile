@@ -42,7 +42,8 @@ pipeline {
                                 name: 'Last Name', 
                                 trim: true,
                                 description: "Enter user last name"
-                            )
+                            ),
+                            booleanParam(description: 'This is description', name: 'BSC_ALL - Y - ADD/UPDATE')
                         ])
                     ])
                 }
@@ -103,21 +104,16 @@ pipeline {
                 script {
                     switch (params.ENVIRONMENT) {
                         case 'DEV':
-                            final String url = "http://localhost:8080/job/user_param_pipeline/api/json?pretty=true"
-                            final String basicAuth = "Authorization: Basic c3VyYWo6c3VyYWo="
-			    final String finalUrl = "\"$basicAuth\" $url"
-			    
-			    echo "finalUrl = ${finalUrl}"
-			    
-                            final String response = bat(script: "curl -L -X GET -H $finalUrl", returnStdout: true).trim()
-
+                            final String url = "http://localhost:8080/job/user-provision-pipeline/api/json?pretty=true"
+                            final String basicAuth = "Authorization: Basic c3NpeWFyYW06c3NpeWFyYW0="
+                            final String finalUrl = "\"$basicAuth\" $url"
                             
-
-                                echo response
-                                 // withCredentials([usernameColonPassword(credentialsId: "jenkins-api-token", variable: "API_TOKEN")]) {
-				//	final String response = sh(script: "curl -s -u $API_TOKEN $url", returnStdout: true).trim()
-				//	echo response
-				  //}
+                            echo "finalUrl = ${finalUrl}"
+                            
+                            final def (String response, int code) = bat(script: "curl -L -X GET -H $finalUrl -w '\\n%{response_code}'", returnStdout: true).trim().tokenize("\n")
+                            echo "code = "+code;
+                            echo "response = ${response}"
+                                 
                         break
                     }
                 }
