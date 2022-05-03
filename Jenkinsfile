@@ -73,7 +73,8 @@ pipeline {
 		        echo "Approvers Required : " + params['Approvers Required'];
 
                 script{
-                    def body = load("./userOnboard.groovy").createUserOnboardingRequestBody(params); 
+                    def body = load("./userOnboard.groovy").createUserOnboardingRequestBody(params);
+			echo "body === ${body}"
                 }
             }
         }
