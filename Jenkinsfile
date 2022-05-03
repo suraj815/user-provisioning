@@ -105,6 +105,10 @@ pipeline {
                         case 'DEV':
                             final String url = "http://localhost:8080/job/user_param_pipeline/api/json?pretty=true"
                             final String basicAuth = "Authorization: Basic c3VyYWo6c3VyYWo="
+			    final String finalUrl = "\"$basicAuth\" $url"
+			    
+			    echo "finalUrl = ${finalUrl}"
+			    
                             final def (String response, int code) =
                             bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $basicAuth $url", returnStdout: true).trim().tokenize("\n")
 
