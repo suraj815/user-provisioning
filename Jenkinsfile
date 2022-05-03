@@ -110,7 +110,7 @@ pipeline {
 			    echo "finalUrl = ${finalUrl}"
 			    
                             final def (String response, int code) =
-                            bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $basicAuth $url", returnStdout: true).trim().tokenize("\n")
+                            bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $finalUrl", returnStdout: true).trim().tokenize("\n")
 
                             echo "HTTP response status code: $code"
 
