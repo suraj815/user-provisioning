@@ -71,7 +71,7 @@ pipeline {
 		        echo "Client Request List : " + params['Client Request List'];
 		        echo "Approvers Required : " + params['Approvers Required'];
 
-                createUserOnboardingRequestBody(params); 
+                def body = load("./userOnboard.groovy").createUserOnboardingRequestBody(params); 
             }
         }
 	    stage('User Provision Approval') {
