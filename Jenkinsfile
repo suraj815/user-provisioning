@@ -145,7 +145,7 @@ def createUserOnboardingRequestBody(params) {
     String[] prtySkRequestArray = prtySkReqListUserInput.split(",");
     for(String prtySkRequest: prtySkRequestArray){
         
-        def eachPrtySkMap = [];
+        def eachPrtySkMap = [:];
         String[] array = prtySkRequest.split("-");
         eachPrtySkMap.put("prtySk", array[0]);
         eachPrtySkMap.put("allChildAccess", array[1]);
