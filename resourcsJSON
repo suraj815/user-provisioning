@@ -10,3 +10,26 @@
         "prtySkAction": "add_update|delete|"
     }]
 }
+
+curl -X POST \
+https://gateway-stage.optum.com/api/tst/clm/submissions/reporting/v1/useronboard/ \
+-H 'Authorization: Bearer imYP7HddIzdXuibs4Er2ScXsxyd63sYv' \
+-H 'Content-Type: application/json' \
+-H 'Cookie: TS010aed22=01f6cec0f5ab770a3800bf6fd0b1f0392d66b9fa0f81e90bda1504d03751187d37a7b16f68cf0456b36f183d02ccd2f17727cbc033' \
+-H 'Postman-Token: 53ebdcf9-b5c0-4ba4-8823-34ded60fc5b9' \
+-H 'cache-control: no-cache' \
+-d '{
+"optumId":"optumId123",
+"emailId":"test@optum.com",
+"firstName":"testFirstName2",
+"lastName":"testLastName2",
+"prtySkReqList":[
+{
+"prtySk": "68",
+"allChildAccess":"Y",
+"prtySkAction":"ADD_UPDATE"
+}]
+
+
+
+}'
