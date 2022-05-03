@@ -3,8 +3,31 @@ import groovy.json.JsonOutput
 def createUserOnboardingRequestBody(params) {
     println("Inside createUserOnboardingRequestBody")
      
+    def prtySkReqList = createPrtySkReqList(params['Client Request List'])
+    def bodyMap = [:];
+
+    bodyMap.put("optumId", params['One Healthcare Id']);
+    bodyMap.put("emailId", params['Email Id']);
+    bodyMap.put("firstName", params['First Name']);
+    bodyMap.put("lastName", params['Last Name']);
+    bodyMap.put("levelOfApprover", createLevelOfApprover(params['Approvers Required']));
+    bodyMap.put("prtySkReqList", prtySkReqList);
+    
+    return JsonOutput.toJson(bodyMap);
+}
+
+def createLevelOfApprover(selectedApprovers){
+    def approverList = [];
+    if(selectedApprovers?.trim()){
+        println("inside if = "+ selectedApprovers?.trim());
+        approverList = selectedApprovers.split(",").collect()
+    }
+    println("approverList = "+ JsonOutput.toJson(approverList));
+    return approverList;
+}
+def createPrtySkReqList(clientSelectedVal){
     def prtySkReqList = [];
-    String prtySkReqListUserInput = params['Client Request List'];
+    String prtySkReqListUserInput = clientSelectedVal;
     String[] prtySkRequestArray = prtySkReqListUserInput.split(",");
     for(String prtySkRequest: prtySkRequestArray){
         
@@ -19,8 +42,6 @@ def createUserOnboardingRequestBody(params) {
     } 
     println("prtySkReqList : "+ JsonOutput.toJson(prtySkReqList));
     return prtySkReqList;
-
-
 }
 
 return this
