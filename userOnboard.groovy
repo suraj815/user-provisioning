@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-
+import groovy.json.JsonOutput
 def createUserOnboardingRequestBody(params) {
     println("Inside createUserOnboardingRequestBody")
      
