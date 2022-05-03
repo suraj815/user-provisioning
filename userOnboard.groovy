@@ -20,7 +20,10 @@ def createLevelOfApprover(selectedApprovers){
     def approverList = [];
     if(selectedApprovers?.trim()){
         println("inside if = "+ selectedApprovers?.trim());
-        approverList = selectedApprovers.split(",").collect()
+        String[] approverArray = selectedApprovers.split(",")
+        for(String approver : approverArray){
+            approverList.add(approver);
+        }
     }
     println("approverList = "+ JsonOutput.toJson(approverList));
     return approverList;
