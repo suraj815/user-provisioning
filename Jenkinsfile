@@ -154,7 +154,7 @@ def createUserOnboardingRequestBody(params) {
         prtySkReqList.add(eachPrtySkMap);
         eachPrtySkMap = [];
     } 
-    echo "prtySkReqList : "+ prtySkReqList;
+    echo "prtySkReqList : "+ JsonOutput.toJson(prtySkReqList);
     return prtySkReqList;
 
 
