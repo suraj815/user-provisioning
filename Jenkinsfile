@@ -109,14 +109,12 @@ pipeline {
 			    
 			    echo "finalUrl = ${finalUrl}"
 			    
-                            final def (String response, int code) =
-                            bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $finalUrl", returnStdout: true).trim().tokenize("\n")
+                            final def  =
+                            bat(script: "curl -L -X GET -H $finalUrl", returnStdout: true).trim()
 
-                            echo "HTTP response status code: $code"
+                            
 
-                            if (code == 200) {
                                 echo response
-                            }
                                  // withCredentials([usernameColonPassword(credentialsId: "jenkins-api-token", variable: "API_TOKEN")]) {
 				//	final String response = sh(script: "curl -s -u $API_TOKEN $url", returnStdout: true).trim()
 				//	echo response
