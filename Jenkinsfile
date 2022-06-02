@@ -50,7 +50,7 @@ pipeline {
                     }
                     echo "baseUrl = "+ baseUrl;
                     env.baseUrl = baseUrl;
-                    def secureGroupRef = load("./securegroupDl.groovy");
+                    //def secureGroupRef = load("./securegroupDl.groovy");
                     echo "env.baseUrl = "+ env.baseUrl;
                     
                 }
