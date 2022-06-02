@@ -9,44 +9,25 @@ pipeline {
     }
 
     stages {
+        
         stage('Fetch User Details') {
             steps {
                 script { 
                     properties([
                         parameters([
+                            
                             choice(
-                                choices: ['DEV', 'TST', 'STG'], 
+                                choices: ['TST', 'STG', 'PROD'], 
                                 name: 'ENVIRONMENT',
-                                description: "Chhose the environment for user creation"
+                                description: "Choose the environment for user creation * "
                             ),
-                            string(
-                                defaultValue: '',
-                                name: 'One Healthcare Id', 
-                                trim: true,
-                                description: "User One Healthcare Id"
-                            ),
-                            string(
-                                defaultValue: '', 
-                                name: 'Email Id', 
-                                trim: true,
-                                description: "User email id as registered with One Healthcare Id"
-                            ),
-                            string(
-                                defaultValue: '', 
-                                name: 'First Name', 
-                                trim: true,
-                                description: "Enter user first name"
-                            ),
-                            string(
-                                defaultValue: '', 
-                                name: 'Last Name', 
-                                trim: true,
-                                description: "Enter user last name"
-                            ),
-                            checkboxParameter(name: 'Client Request List', format: 'JSON',
-                pipelineSubmitContent: '{"CheckboxParameter": [{"key": "BSC_ALL-Y-ADD_UPDATE","value": "68-Y-ADD_UPDATE"},{"key": "BSC_ALL-N-ADD_UPDATE","value": "68-N-ADD_UPDATE"},{"key": "BSC_ALL-Y-DELETE","value": "68-Y-DELETE"}, {"key": "BSC_ALL-N-DELETE","value": "68-N-DELETE"}]}', description: 'Select client access as needed'),
-				checkboxParameter(name: 'Approvers Required', format: 'JSON',
-                pipelineSubmitContent: '{"CheckboxParameter": [{"key": "TE","value": "TE"},{"key": "BIZ","value": "BIZ"}]}', description: 'Select Approvers')
+                            validatingString(defaultValue: '', description: 'User One Healthcare Id * ', failedValidationMessage: 'Please enter One Healthcare Id', name: 'One Healthcare Id', regex: '^(?!\s*$).+'),
+                            validatingString(defaultValue: '', description: 'User email id as registered with One Healthcare Id * ', failedValidationMessage: 'Please enter valid email id', name: 'Email Id', regex: '^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$'),
+                            validatingString(defaultValue: '', description: 'Enter user first name * ', failedValidationMessage: 'Please enter first name', name: 'First Name', regex: '^(?!\s*$).+'),
+                            validatingString(defaultValue: '', description: 'Enter user last name * ', failedValidationMessage: 'Please enter last name', name: 'Last Name', regex: '^(?!\s*$).+'),
+                            validatingString(defaultValue: '', description: 'Enter Incident Id *', failedValidationMessage: 'Please enter Incident Id', name: 'Incident Id', regex: '^(?!\s*$).+')
+
+                            
                         ])
                     ])
                 }
@@ -57,111 +38,25 @@ pipeline {
             steps{
                 echo "Validating user provision details here";
                 script{
-                    def validator = load("./validator.groovy")
-                    validator.checkParamInputs()
-                }
-            }
-        }
-        stage('call user provision request'){
-	    agent any
-            steps{
-                echo "optum Id : " + params['One Healthcare Id'];
-                echo "email Id : " + params['Email Id'];
-                echo "first name : " + params['First Name'];
-                echo "last name : " + params['Last Name'];
-		        echo "Client Request List : " + params['Client Request List'];
-		        echo "Approvers Required : " + params['Approvers Required'];
-
-                script{
-                    def body = load("./userOnboard.groovy").createUserOnboardingRequestBody(params);
-			echo "body === ${body}"
-                }
-            }
-        }
-	    stage('User Provision Approval') {
-            steps {
-                script {
-                    CHOICES = ["Approve", "Reject"];
-                    def INPUT_PARAMS = input(
-                            message: 'Approve Reject User provisioning request',
-                            ok: 'Approve',
-                            id: 'tag_id',
-                            submitter: "ssiyaram",
-                            submitterParameter: 'SUBMITTER_RESPONSE',
-                            parameters: [
-                                        string(name: 'Enter Comments', defaultValue: '', trim: true,description: "Enter Comments for approve/reject. It is mandatory."),
-                                        choice(choices: CHOICES, description: 'Select a tag for this build', name: 'ACTION')]
-                    )
-                    env.USER_APPROVE_REJECT_COMMENT = INPUT_PARAMS['Enter Comments']
-                    env.USER_ACTION_TAKEN = INPUT_PARAMS['ACTION']
-                    env.APPROVER_USERNAME = INPUT_PARAMS['SUBMITTER_RESPONSE']
-                       
-                }           
-                //echo "${env.YourTag['SUBMITTER_RESPONSE']} took action ${env.YourTag.TAG} on user provision request."
-                //echo "Deploying ${env.YourTag}. Have a nice day."
-            }
-        }
-        stage('post user provision approval'){
-            steps{
-                script{
-                    echo "${env.APPROVER_USERNAME} has ${env.USER_ACTION_TAKEN} with comment = ${env.USER_APPROVE_REJECT_COMMENT}"
-                }
-            }
-        }
-        
-	stage('Select Deployment Environment') {
-	    agent any 
-            steps {
-                script {
-                    switch (params.ENVIRONMENT) {
-                        case 'DEV':
-                            final String url = "http://imccbcp29-msl1:8080/job/user-provision-pipeline/api/json?pretty=true"
-                            final String basicAuth = "Authorization: Basic c3NpeWFyYW06c3NpeWFyYW0="
-                            final String finalUrl = "\"$basicAuth\" $url"
-                            
-                            echo "finalUrl = ${finalUrl}"
-                            
-                            //final def (String response, int code) = bat(script: "curl -L -X GET -w '\\n%{response_code}' -H $finalUrl", returnStdout: true).trim().tokenize("\n")
-                            //echo "code = "+code;
-                            final String response = bat(script: "curl -L -X GET -H $finalUrl", returnStdout: true).trim()
-			    echo "response = ${response}"
-                                 
-                        break
+                    String baseUrl = "http://sp-edps.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    String environment = params["ENVIRONMENT"];
+                    echo "env : "+ environment;
+                    if("DEV" == environment){
+                        baseUrl = "http://sp-edps-dev.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    }else if("TST" == environment){
+                        baseUrl = "http://sp-edps-tst.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    }else if("STG" == environment){
+                        baseUrl = "http://sp-edps-stg.optum.com/api/submissions-portal/edps/reporting/v1/";
                     }
+                    echo "baseUrl = "+ baseUrl;
+                    env.baseUrl = baseUrl;
+                    def secureGroupRef = load("./securegroupDl.groovy");
+                    echo "env.baseUrl = "+ env.baseUrl;
+                    
                 }
             }
         }
-        stage('User Business Approval') {
-         agent none
-         steps {
-
-             echo 'Inside User Business Approval'
-             //glApproval message: 'Approve User?', unit: 'HOURS', time: 3, defaultValue: 'Enter approval comments', submitter: 'EDPS_DEV'
-             }
-         }
     }
-}
-
-def createUserOnboardingRequestBody(params) {
-    echo "Inside createUserOnboardingRequestBody"
-    def prtySkReqList = [];
-    String prtySkReqListUserInput = params['Client Request List'];
-    String[] prtySkRequestArray = prtySkReqListUserInput.split(",");
-    for(String prtySkRequest: prtySkRequestArray){
-        
-        def eachPrtySkMap = [:];
-        String[] array = prtySkRequest.split("-");
-        eachPrtySkMap.put("prtySk", array[0]);
-        eachPrtySkMap.put("allChildAccess", array[1]);
-        eachPrtySkMap.put("prtySkAction", array[2]);
-
-        prtySkReqList.add(eachPrtySkMap);
-        eachPrtySkMap = [];
-    } 
-    echo "prtySkReqList : "+ JsonOutput.toJson(prtySkReqList);
-    return prtySkReqList;
-
-
 }
 
 def determineUserEnvBuildVersion() {
