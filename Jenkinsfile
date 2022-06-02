@@ -22,7 +22,7 @@ pipeline {
                                 description: "Choose the environment for user creation * "
                             ),
                             validatingString(defaultValue: '', description: 'User One Healthcare Id * ', failedValidationMessage: 'Please enter One Healthcare Id', name: 'One Healthcare Id', regex: '^(?! \\s*$).+'),
-                            email(defaultValue: '', description: 'User email id as registered with One Healthcare Id * ', domain: '', externalEmail: false, name: 'Email Id'),
+                            email(defaultValue: '', description: 'User email id as registered with One Healthcare Id * ', domain: 'optum.com', externalEmail: false, name: 'Email Id'),
                             validatingString(defaultValue: '', description: 'Enter user first name * ', failedValidationMessage: 'Please enter first name', name: 'First Name', regex: '^(?! \\s*$).+'),
                             validatingString(defaultValue: '', description: 'Enter user last name * ', failedValidationMessage: 'Please enter last name', name: 'Last Name', regex: '^(?! \\s*$).+'),
                             validatingString(defaultValue: '', description: 'Enter Incident Id *', failedValidationMessage: 'Please enter Incident Id', name: 'Incident Id', regex: '^(?! \\s*$).+')
