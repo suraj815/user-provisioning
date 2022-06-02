@@ -1,0 +1,174 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent none
+
+    environment {
+        LOGLEVEL = "info"
+        USER_APPROVAL = "reject"
+    }
+
+    stages {
+        
+        stage('Fetch User Details') {
+            steps {
+                script { 
+                def user = hudson.model.User.current();
+                env.loggedInUserEmail = user.getProperty(hudson.tasks.Mailer.UserProperty.class).getAddress();
+		    	echo "loggedInUserEmail = "+ env.loggedInUserEmail;
+			//echo "User email = $BUILD_USER_EMAIL";
+                    properties([
+                        parameters([
+                            
+                            choice(
+                                choices: ['TST', 'STG', 'PROD'], 
+                                name: 'ENVIRONMENT',
+                                description: "Choose the environment for user creation * "
+                            ),
+                            validatingString(defaultValue: '', description: 'User One Healthcare Id * ', failedValidationMessage: 'Please enter One Healthcare Id', name: 'One Healthcare Id', regex: '^(?!\s*$).+'),
+                            validatingString(defaultValue: '', description: 'User email id as registered with One Healthcare Id * ', failedValidationMessage: 'Please enter valid email id', name: 'Email Id', regex: '^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$'),
+                            validatingString(defaultValue: '', description: 'Enter user first name * ', failedValidationMessage: 'Please enter first name', name: 'First Name', regex: '^(?!\s*$).+'),
+                            validatingString(defaultValue: '', description: 'Enter user last name * ', failedValidationMessage: 'Please enter last name', name: 'Last Name', regex: '^(?!\s*$).+'),
+                            validatingString(defaultValue: '', description: 'Enter Incident Id *', failedValidationMessage: 'Please enter Incident Id', name: 'Incident Id', regex: '^(?!\s*$).+'),
+                            [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'Choose the client for which access is required', filterLength: 1, filterable: false, name: 'CLIENT', randomName: 'choice-parameter-178187094127600', referencedParameters: 'ENVIRONMENT', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: ''], script: [classpath: [], sandbox: false, script: '''import groovy.json.JsonSlurper
+endpoint = "clients"
+try {
+    baseUrl = "http://sp-edps.optum.com/api/submissions-portal/edps/reporting/v1/";
+
+    if (!binding.variables.containsKey("ENVIRONMENT")) {
+        return [];
+    }
+
+    String env = binding.getProperty("ENVIRONMENT");
+    println("env = "+ env);
+    if("DEV" == env){
+        baseUrl = "http://sp-edps-dev.optum.com/api/submissions-portal/edps/reporting/v1/";
+    }else if("TST" == env){
+        baseUrl = "http://sp-edps-tst.optum.com/api/submissions-portal/edps/reporting/v1/";
+    }else if("STG" == env){
+        baseUrl = "http://sp-edps-stg.optum.com/api/submissions-portal/edps/reporting/v1/";
+    }
+    clientsUrl = baseUrl + endpoint;
+    println("clientsUrl = "+ clientsUrl);
+
+    def http_client = new URL(clientsUrl).openConnection() as HttpURLConnection
+    http_client.setRequestMethod(\'GET\')
+    http_client.connect()
+    def clientsReponse = [:]    
+    if (http_client.responseCode == 200) {
+        clientsReponse = new JsonSlurper().parseText(http_client.inputStream.getText(\'UTF-8\'))
+    } else {
+        println("HTTP response error");
+        return [];
+       // System.exit(0)
+    }
+    def clientArray = []
+    clientsReponse.each { eachClient ->
+        clientArray.add(eachClient.clntNm)    
+    }
+    return clientArray.sort()
+} catch (Exception e) {
+    // handle exceptions like timeout, connection errors, etc.
+    println("Inside Catch");
+    println(e)
+}''']]],
+[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT', description: 'Choose child access', filterLength: 1, filterable: false, name: 'ALL CHILD ACCESS', randomName: 'choice-parameter-182154935637200', referencedParameters: 'ENVIRONMENT,CLIENT', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: ''], script: [classpath: [], sandbox: false, script: '''import groovy.json.JsonSlurper
+endpoint = "clients";
+try {
+    def includeChildDataArray = [];
+    includeChildDataArray << "N";
+        baseUrl = "http://sp-edps.optum.com/api/submissions-portal/edps/reporting/v1/";
+
+    if (!binding.variables.containsKey("ENVIRONMENT")) {
+        return includeChildDataArray;
+    }
+
+    String env = binding.getProperty("ENVIRONMENT");
+
+    if("DEV" == env){
+        baseUrl = "http://sp-edps-dev.optum.com/api/submissions-portal/edps/reporting/v1/";
+    }else if("TST" == env){
+        baseUrl = "http://sp-edps-tst.optum.com/api/submissions-portal/edps/reporting/v1/";
+    }else if("STG" == env){
+        baseUrl = "http://sp-edps-stg.optum.com/api/submissions-portal/edps/reporting/v1/";
+    }
+    clientsUrl = baseUrl + endpoint;
+    println("ALL CHILD ACCESS, clientsUrl = "+ clientsUrl);
+    def http_client = new URL(clientsUrl).openConnection() as HttpURLConnection
+    http_client.setRequestMethod(\'GET\')
+    http_client.connect()
+    def clientsReponse = [:]    
+    
+
+    if (http_client.responseCode == 200) {
+        clientsReponse = new JsonSlurper().parseText(http_client.inputStream.getText(\'UTF-8\'))
+    } else {
+        println("HTTP response error")
+        return includeChildDataArray;
+        //System.exit(0)
+    }
+
+    if (!binding.variables.containsKey("CLIENT")) {
+        return includeChildDataArray
+    }
+
+    String clientName = binding.getProperty("CLIENT")
+    
+    clientsReponse.each { eachClient ->
+        if(eachClient[\'clntNm\'] == clientName){
+            includeChildData = eachClient[\'includeChildData\'];
+        }   
+    }
+    if(includeChildData == "Y"){
+        includeChildDataArray << "Y";
+    }
+    return includeChildDataArray;
+} catch (Exception e) {
+    // handle exceptions like timeout, connection errors, etc.
+    println("Inside catch of ALL CHILD ACCESS");
+    println(e)
+}
+''']]]
+
+                            
+                        ])
+                    ])
+                }
+            }
+        }
+        stage('Validating Request') {
+            agent any
+            steps{
+                echo "Validating user provision details here";
+                script{
+                    String baseUrl = "http://sp-edps.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    String environment = params["ENVIRONMENT"];
+                    echo "env : "+ environment;
+                    if("DEV" == environment){
+                        baseUrl = "http://sp-edps-dev.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    }else if("TST" == environment){
+                        baseUrl = "http://sp-edps-tst.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    }else if("STG" == environment){
+                        baseUrl = "http://sp-edps-stg.optum.com/api/submissions-portal/edps/reporting/v1/";
+                    }
+                    echo "baseUrl = "+ baseUrl;
+                    env.baseUrl = baseUrl;
+                    def secureGroupRef = load("./securegroupDl.groovy");
+                    echo "env.baseUrl = "+ env.baseUrl;
+                    
+                }
+            }
+        }
+    }
+}
+
+def determineUserEnvBuildVersion() {
+
+	echo "Build number is ${BUILD_NUMBER}"
+
+	//def version =  params.ENVIRONMENT + "-" + params.User_Id +'-' + "${BUILD_NUMBER}"
+	//For some unknown reason, setting artifact version works in maven only when set using a env variable like below
+
+
+	env.PIPELINE_VERSION = version
+}
