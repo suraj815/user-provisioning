@@ -22,7 +22,7 @@ pipeline {
                                 description: "Choose the environment for user creation * "
                             ),
                             validatingString(defaultValue: '', description: 'User One Healthcare Id * ', failedValidationMessage: 'Please enter One Healthcare Id', name: 'One Healthcare Id', regex: '^[a-z0-9_-]{6,50}$'),
-                            validatingString(defaultValue: '', description: 'User email id as registered with One Healthcare Id * ', failedValidationMessage: 'Please enter valid email id', name: 'Email Id', regex: '^([a-z0-9_\.\+-]{1,50}+)@([\da-z\.-]+)\.([a-z\.]{2,6})$'),
+                            validatingString(defaultValue: '', description: 'User email id as registered with One Healthcare Id * ', failedValidationMessage: 'Please enter valid email id', name: 'Email Id', regex: '^([a-z0-9_\\.\+-]{1,50}+)@([\da-z\.-]+)\.([a-z\.]{2,6})$'),
                             validatingString(defaultValue: '', description: 'Enter user first name * ', failedValidationMessage: 'Please enter first name', name: 'First Name', regex: '^[a-z0-9_-]{1,50}$'),
                             validatingString(defaultValue: '', description: 'Enter user last name * ', failedValidationMessage: 'Please enter last name', name: 'Last Name', regex: '^[a-z0-9_-]{1,50}$'),
                             validatingString(defaultValue: '', description: 'Enter Incident Id *', failedValidationMessage: 'Please enter Incident Id', name: 'Incident Id', regex: '^[a-z0-9_-]{1,50}$')
