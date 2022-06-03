@@ -51,6 +51,8 @@ pipeline {
                 echo "currentBuild.getBuildCauses() : "+ currentBuild.getBuildCauses();
                 echo "prtySk : "+ env.prtySk;
                 echo "baseUrl : "+ env.baseUrl;
+		    echo "first name length = "+ params['First Name'].length();
+		    echo "first name length post trim() = "+ params['First Name'].trim().length();
                 script{
                     String baseUrl = "http://sp-edps.optum.com/api/submissions-portal/edps/reporting/v1/";
                     String environment = params["ENVIRONMENT"];
