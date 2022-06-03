@@ -37,6 +37,20 @@ pipeline {
             agent any
             steps{
                 echo "Validating user provision details here";
+		    echo "optum Id : " + params['One Healthcare Id'];
+                echo "email Id : " + params['Email Id'];
+                echo "first name : " + params['First Name'];
+                echo "last name : " + params['Last Name'];
+                echo "Bearer Token : " + params['Bearer Token'];
+                echo "CLIENT : " + params['CLIENT'];
+                echo "Action : " + params['ACTION'];
+                echo "ALL CHILD ACCESS : " + params['ALL CHILD ACCESS'];
+                echo "Incident Id : " + params['Incident Id'];
+                echo "build url : $BUILD_URL";
+                echo "Job url : $JOB_URL";
+                echo "currentBuild.getBuildCauses() : "+ currentBuild.getBuildCauses();
+                echo "prtySk : "+ env.prtySk;
+                echo "baseUrl : "+ env.baseUrl;
                 script{
                     String baseUrl = "http://sp-edps.optum.com/api/submissions-portal/edps/reporting/v1/";
                     String environment = params["ENVIRONMENT"];
