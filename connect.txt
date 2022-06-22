@@ -1,0 +1,29 @@
+{
+    "name": "FINALIZE_INBOUND_ASM",
+    "config": {
+       "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+        "connection.user": "${file:/opt/optum/connectors/data/credentials.properties:EDPS_DB_USERNAME}",
+        "connection.password": "${file:/opt/optum/connectors/data/credentials.properties:EDPS_DB_PASSWORD}",
+        "config.providers" : "file",
+        "config.providers.file.class" : "org.apache.kafka.common.config.provider.FileConfigProvider",
+        "tasks.max": "1",
+        "transforms": "RenameField,Cast,ValueToKey",
+        "mode":"bulk",
+        "topic.prefix": "${file:/opt/optum/connectors/data/credentials.properties:EDPS_FINALIZE_KAFKA_TOPIC}",
+        "poll.interval.ms": "3600000",
+        "transforms.Cast.spec": "FILE_KEY:int64",
+        "transforms.Cast.type": "org.apache.kafka.connect.transforms.Cast$Value",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "transforms.ValueToKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+        "query": "select * from (SELECT a.FILE_KEY ,A.FILE_NAME ,'FINALIZE_INBOUND_ASM' as msgClass FROM FRMK_STG_FILEINFO a, ASM_HDR_FTR b WHERE     a.FILE_KEY = b.FILE_KEY_SK  AND a.PROCESS_STS_KEY IN (6,18,6010,6011) AND a.FILE_NAME LIKE 'ASMINB%')",
+        "transforms.ValueToKey.fields": "FILE_KEY",
+       "transforms.RenameField.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+       "transforms.RenameField.renames": "MSGCLASS:msgClass",
+        "key.converter.schemas.enable": "false",
+        "value.converter.schemas.enable": "false",
+        "name": "FINALIZE_INBOUND_ASM",
+        "connection.url": "${file:/opt/optum/connectors/data/credentials.properties:EDPS_DB_URL}",
+        "quote.sql.identifiers": "never"
+    }
+}
